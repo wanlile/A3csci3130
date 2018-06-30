@@ -9,9 +9,13 @@ import android.widget.EditText;
 public class CreateContactAcitivity extends Activity {
 
     private Button submitButton;
-    private EditText nameField, emailField;
+    private EditText nameField, businesField, primaryField, addressField, provinceField ;
     private MyApplicationData appState;
 
+    /**
+     * This method use to initialize all the fields.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,15 +25,31 @@ public class CreateContactAcitivity extends Activity {
 
         submitButton = (Button) findViewById(R.id.submitButton);
         nameField = (EditText) findViewById(R.id.name);
-        emailField = (EditText) findViewById(R.id.email);
+        businesField = (EditText) findViewById(R.id.bn);
+        primaryField = (EditText) findViewById(R.id.pb);
+        addressField = (EditText) findViewById(R.id.addr);
+        provinceField = (EditText) findViewById(R.id.pt);
     }
 
+    /**
+     * This method use to submit the information to the firebase.
+     * @param v
+     */
     public void submitInfoButton(View v) {
         //each entry needs a unique ID
         String personID = appState.firebaseReference.push().getKey();
         String name = nameField.getText().toString();
-        String email = emailField.getText().toString();
-        Contact person = new Contact(personID, name, email);
+        String busines = businesField.getText().toString();
+        String primary = primaryField.getText().toString();
+        String address = addressField.getText().toString();
+        String province = provinceField.getText().toString();
+
+
+        if (!Contact.validate(name,busines,primary,address,province)){
+            return;
+        }
+
+        Contact person = new Contact(personID, name, busines,primary, address, province);
 
         appState.firebaseReference.child(personID).setValue(person);
 
